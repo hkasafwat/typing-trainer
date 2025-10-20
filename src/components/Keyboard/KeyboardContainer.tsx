@@ -1,4 +1,3 @@
-import Key from "./Key";
 import { useState, useContext, useEffect, useRef } from "react";
 import { KeyboardContext } from "../../contexts/KeyboardProvider";
 import Keyboard from 'react-simple-keyboard';
@@ -8,16 +7,9 @@ export default function KeyboardContainer() {
     const [ready, setReady] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
 
-    const keys = 75;
-    const { setTextToTypeChars, setTypedChars, typedChars } = useContext(KeyboardContext);
+    const { setTypedChars, typedChars } = useContext(KeyboardContext);
 
     const onKeyboardPress = (key: string) => {
-        const specialKeys = ["Backspace", "Enter", "Shift", "Control", "Alt", "Meta", "Tab", "CapsLock", "Escape", "Space"];
-
-        if (specialKeys.includes(key)) {
-            return;
-        }
-
         setTypedChars([...typedChars, key]);
     }
 
