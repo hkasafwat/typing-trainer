@@ -1,12 +1,14 @@
 import { createContext, useState } from "react";
 
 interface KeyboardContextType {
+    typingMode: boolean;
     totalKeysPressed: number;
     mistakes: number;
     correctKeys: number;
     textToTypeChars: string[];
     typedChars: string[];
     correctlyTypedChars: string[];
+    setTypingMode: (typingMode: boolean) => void;
     setMistakes: (mistakes: number) => void;
     setCorrectKeys: (correctKeys: number) => void;
     setTypedChars: (chars: string[]) => void;
@@ -16,6 +18,7 @@ interface KeyboardContextType {
 }
 
 const KeyboardContext = createContext<KeyboardContextType>({
+    typingMode: false,
     totalKeysPressed: 0,
     mistakes: 0,
     correctKeys: 0,
@@ -28,6 +31,7 @@ const KeyboardContext = createContext<KeyboardContextType>({
     setTypedChars: () => {},
     setCorrectlyTypedChars: () => {},
     setTotalKeysPressed: () => {},
+    setTypingMode: () => {},
 });
 
 const KeyboardProvider = ({ children }: { children: React.ReactNode }) => {
@@ -37,9 +41,12 @@ const KeyboardProvider = ({ children }: { children: React.ReactNode }) => {
     const [correctlyTypedChars, setCorrectlyTypedChars] = useState<string[]>([]);
     const [correctKeys, setCorrectKeys] = useState<number>(0);
     const [totalKeysPressed, setTotalKeysPressed] = useState<number>(0);
+    const [typingMode, setTypingMode] = useState<boolean>(false);
 
     return (
         <KeyboardContext.Provider value={{
+            typingMode,
+            setTypingMode,
             mistakes,
             setMistakes,
             typedChars,

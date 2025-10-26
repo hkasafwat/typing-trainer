@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import Keyboard from './components/Keyboard/KeyboardContainer'
 import TextToType from './components/textToType';

@@ -4,7 +4,7 @@ import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 
 export default function KeyboardContainer() {
-    const [ready, setReady] = useState(false);
+    const { typingMode, setTypingMode } = useContext(KeyboardContext);
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     const { setTypedChars, typedChars } = useContext(KeyboardContext);
@@ -20,10 +20,10 @@ export default function KeyboardContainer() {
     }
 
     useEffect(() => {
-        if (ready) {
+        if (typingMode) {
             focusInput();
         }
-    }, [ready]);
+    }, [typingMode]);
 
     return (
         <>
@@ -38,13 +38,13 @@ export default function KeyboardContainer() {
                         type="text" 
                         className="absolute left-[-999999px]" 
                         onKeyDown={(e) => onKeyboardPress(e.key)}
-                        onBlur={() => setReady(false)}
+                        onBlur={() => setTypingMode(false)}
                     />
 
-                    {!ready && (
+                    {!typingMode && (
                         <div className="w-full h-full absolute top-0 left-0 flex justify-center items-center bg-gray-500/60 rounded-sm">
                             <button 
-                            onClick={() => setReady(true)}
+                            onClick={() => setTypingMode(true)}
                             className="bg-blue-400 hover:bg-blue-500 text-white font-bold shadow-md px-4 py-2 rounded-sm cursor-pointer transition-all transform duration-300"
                             >
                                 Click to start typing

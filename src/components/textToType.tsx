@@ -1,8 +1,10 @@
 import { KeyboardContext } from "../contexts/KeyboardProvider";
 import { useContext, useState, useEffect } from "react";
+import { useStopwatch } from 'react-timer-hook';
 
 export default function TextToType() {
     const {
+        typingMode,
         textToTypeChars,
         setTextToTypeChars,
         typedChars,
@@ -17,7 +19,6 @@ export default function TextToType() {
     } = useContext(KeyboardContext);
     const [isTextLoaded, setIsTextLoaded] = useState(false);
     const [lastLetter, setLastLetter] = useState("");
-    const [words, setWords] = useState(0);
     const [wpm, setWpm] = useState(0);
 
     const textToType = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -65,35 +66,73 @@ export default function TextToType() {
         }
     }, [typedChars]);
 
+    const {
+        totalSeconds,
+        milliseconds,
+        seconds,
+        minutes,
+        hours,
+        days,
+        isRunning,
+        start,
+        pause,
+        reset,
+    } = useStopwatch({ autoStart: true, interval: 20 });
+
+    useEffect(() => {
+        if (typingMode) {
+            reset();
+            start();
+            console.log("start");
+        }
+
+        if (!typingMode) {
+            reset();
+            console.log("reset");
+        }
+
+        if (isRunning) {
+            setWpm((correctKeys / 5) / minutes);
+        }
+    }, [typingMode]);
+
     return (
         <>
-            <div className="container bg-white p-5 rounded-sm">
-                <div className="flex flex-col justify-between mb-4">
-                    <p className="text-2xl tracking-widest">Accuracy: {((correctKeys / totalKeysPressed) * 100).toFixed(0)}%</p>
-                    <p className="text-2xl tracking-widest">Mistakes: {mistakes}</p>
-                    <p className="text-2xl tracking-widest">
-                        Correct Keys: {correctKeys}
-                    </p>
-                    <p className="text-2xl tracking-widest">
-                        Total Keys Pressed: {totalKeysPressed}
-                    </p>
-                    <p className="text-2xl tracking-widest">
-                        Words: {(correctKeys / 5)}
-                    </p>
+            <div className="container flex flex-col gap-5">
 
-                    {lastLetter && (
+                <div className="metrics  bg-white p-5 rounded-sm">
+                    <div className="flex flex-col justify-between mb-4">
+                        <p className="text-2xl tracking-widest">Accuracy: {((correctKeys / totalKeysPressed) * 100).toFixed(0)}%</p>
+                        <p className="text-2xl tracking-widest">Mistakes: {mistakes}</p>
                         <p className="text-2xl tracking-widest">
-                            Last Letter: {lastLetter}
+                            Correct Keys: {correctKeys}
                         </p>
-                    )}
+                        <p className="text-2xl tracking-widest">
+                            Total Keys Pressed: {totalKeysPressed}
+                        </p>
+                        <p className="text-2xl tracking-widest">
+                            Words: {(correctKeys / 5)}
+                        </p>
+                        {/* <p className="text-2xl tracking-widest">
+                        WPM: {wpm}
+                    </p> */}
+                        {lastLetter && (
+                            <p className="text-2xl tracking-widest">
+                                Last Letter: {lastLetter}
+                            </p>
+                        )}
+                    </div>
                 </div>
-                <div className="text-wrap">
-                    <p className="text-2xl tracking-widest inline text-green-700">
-                        {correctlyTypedChars.join("")}
-                    </p>
-                    <p className="opacity-20 text-2xl tracking-widest inline">
-                        {textToTypeChars}
-                    </p>
+
+                <div className=" bg-white p-5 rounded-sm">
+                    <div className="text-wrap">
+                        <p className="text-2xl tracking-widest inline text-green-700">
+                            {correctlyTypedChars.join("")}
+                        </p>
+                        <p className="opacity-20 text-2xl tracking-widest inline">
+                            {textToTypeChars}
+                        </p>
+                    </div>
                 </div>
             </div>
         </>
