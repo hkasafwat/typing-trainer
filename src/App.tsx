@@ -1,6 +1,6 @@
 import './App.css'
 import Keyboard from './components/Keyboard/KeyboardContainer'
-import TextToType from './components/textToType';
+import TextToType from './components/TextToType';
 
 import { KeyboardProvider } from './contexts/KeyboardProvider';
 
